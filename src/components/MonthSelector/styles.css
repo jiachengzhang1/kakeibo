@@ -1,0 +1,27 @@
+/* .month-selector {
+  margin-left: auto;
+  float: right;
+} */
+
+.input-select {
+  margin-left: 15px;
+}
+
+.month,
+.year {
+  width: 120px;
+}
+
+@media (max-width: 676px) {
+  .input-select {
+    margin-left: 0px;
+    margin-right: 5px;
+  }
+}
+
+@media (max-width: 360px) {
+  .input-select {
+    margin-left: 0px;
+    margin-right: 2px;
+  }
+}

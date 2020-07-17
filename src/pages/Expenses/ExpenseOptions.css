@@ -1,0 +1,56 @@
+.expense-options {
+  display: flex;
+}
+
+.create-expense {
+  display: flex;
+}
+
+.create-expense-button {
+  width: 170px;
+  padding: 5px;
+  padding-left: 7px;
+  padding-right: 5px;
+  background-color: white;
+  border-radius: 3px;
+  height: 40px;
+  font-size: 16px !important;
+  color: rgba(28, 28, 207, 0.788);
+  border: 1px solid rgba(28, 28, 207, 0.644);
+}
+
+.create-expense-button:hover {
+  background: rgba(28, 28, 207, 0.75);
+  color: white !important;
+  border: 1px solid rgba(28, 28, 207, 0.671);
+}
+
+.filters {
+  display: flex;
+  margin-left: auto;
+  float: right;
+  height: 100%;
+}
+
+.expesens-per-page {
+  width: 70px;
+  margin-right: 10px;
+}
+
+@media (max-width: 676px) {
+  .expense-options {
+    flex-direction: column;
+  }
+  .filters {
+    margin-top: 15px;
+  }
+  .create-expense-button {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .create-expense-button {
+    font-size: 12px;
+  }
+}

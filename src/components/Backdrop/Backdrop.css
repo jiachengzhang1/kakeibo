@@ -1,0 +1,9 @@
+.backdrop {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 45px;
+  left: 0;
+  background: #81818160;
+  z-index: 100;
+}

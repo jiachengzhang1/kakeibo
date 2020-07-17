@@ -1,0 +1,43 @@
+.toggle-button {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 29px;
+  width: 30px;
+  background: transparent;
+  border: none;
+  box-sizing: border-box;
+  margin-right: 10px;
+  margin-left: 20px;
+}
+
+.toggle-button:focus {
+  outline: none;
+}
+
+.toggle-button-line {
+  width: 28px;
+  height: 3px;
+  background: white;
+  transition: all 0.25s ease-in-out;
+}
+
+.toggle-button-line.top.open {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.toggle-button-line.bottom.open {
+  transform: translateY(-7px) rotate(135deg);
+}
+
+.toggle-button-line.mid.open {
+  display: none;
+}
+
+@media (min-width: 769px) {
+  .toggle-button {
+    display: none;
+  }
+}

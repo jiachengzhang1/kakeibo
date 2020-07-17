@@ -1,0 +1,268 @@
+.expense-table {
+  margin-top: 15px;
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px, rgba(0, 0, 0, 0.24) 0 1px 2px;
+  overflow: hidden;
+  border-spacing: 0;
+  border-radius: 5px;
+}
+
+.expense-table td,
+.expense-table tr th {
+  padding: 8px 10px;
+  width: 20%;
+  font-size: 16px;
+}
+
+.expense-table td:last-child,
+.expense-table tr th:last-child {
+  width: 2px;
+}
+
+.expense-delete-btn {
+  position: relative;
+  padding: auto;
+  margin: auto;
+  height: 18px;
+  width: 18px;
+  /* display: block; */
+}
+
+.expense-delete-btn-delete {
+  display: none;
+}
+
+.expense-delete-btn-left,
+.expense-delete-btn-right {
+  padding: auto;
+  margin: auto;
+  width: 14px;
+  height: 2px;
+  border-radius: 5px;
+  background-color: black;
+}
+
+.expense-delete-btn-left {
+  transform: translateX(-4px) translateY(7px) rotate(45deg);
+}
+.expense-delete-btn-right {
+  transform: translateX(-4px) translateY(5px) rotate(135deg);
+}
+
+.expense-delete-btn:hover .expense-delete-btn-left {
+  background-color: red;
+}
+.expense-delete-btn:hover .expense-delete-btn-right {
+  background-color: red;
+}
+
+.expense-table tbody tr:hover {
+  cursor: pointer;
+  background: rgba(199, 199, 199, 0.315);
+}
+
+.expense-table thead tr {
+  border: none;
+  background-color: rgb(7, 7, 66);
+  color: white;
+}
+
+.expense-table tr {
+  border-bottom: 1px solid rgba(219, 219, 219, 0.39);
+  background: white;
+}
+
+.expense-table tr:last-child {
+  border: none;
+}
+
+.expense-input-row:hover {
+  background: none !important;
+  cursor: pointer;
+}
+
+.expense-input-row input,
+select {
+  height: 25px;
+  position: relative;
+  width: 100%;
+  border: 1px solid rgba(97, 91, 91, 0.61);
+  border-radius: 3px;
+  z-index: 200;
+  box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.25);
+}
+
+.react-datepicker-popper {
+  z-index: 400 !important;
+}
+
+.react-datepicker__month-container {
+  box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.25);
+}
+
+.expense-input-row input:focus,
+select:focus {
+  border: none;
+}
+
+.expense-input-buttons {
+  /* width: 100%; */
+  display: flex;
+  position: relative;
+  justify-content: center;
+  padding: auto;
+  margin: auto;
+  /* position: fixed; */
+}
+
+.expense-input-buttons button {
+  font-size: 14px;
+  border-radius: 3px;
+  margin-right: 10px;
+  background: none;
+  z-index: 200;
+  background-color: white;
+  box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.25);
+}
+
+.expense-form-cancel-btn {
+  border: 1px solid red;
+  color: red;
+}
+
+.expense-form-cancel-btn:hover {
+  background-color: red;
+  color: white;
+}
+
+.expense-form-save-btn {
+  border: 1px solid green;
+  color: green;
+}
+
+.expense-form-save-btn:hover {
+  background-color: green;
+  color: white;
+}
+
+@media (max-width: 1028px) {
+  .expense-input-row input,
+  select {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 1028px) {
+  .expense-table {
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .expense-table thead {
+    display: none;
+  }
+
+  .expense-table,
+  .expense-table tbody,
+  .expense-table tr,
+  .expense-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .expense-table tr {
+    margin-bottom: 15px;
+    border: 1px solid rgba(0, 0, 128, 0.295);
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    border-radius: 6px;
+  }
+
+  .expense-table td {
+    text-align: right;
+    padding-left: 50%;
+    text-align: right;
+    position: relative;
+    border-bottom: 1px solid rgba(209, 206, 206, 0.3);
+  }
+
+  .expense-table td:last-child {
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    border: none;
+  }
+
+  .expense-table td:last-child::before {
+    content: none;
+  }
+
+  .expense-input-buttons {
+    width: 100%;
+    border: none;
+  }
+
+  .expense-input-buttons button {
+    margin: auto;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 0;
+    font-size: 20px;
+    color: white;
+    border-top: 2px solid black;
+  }
+
+  .expense-input-buttons button:first-child {
+    background: rgba(44, 3, 224, 0.637);
+    border-bottom-left-radius: 5px;
+    border-right: 1px solid black;
+  }
+  .expense-input-buttons button:last-child {
+    background: rgba(136, 129, 129, 0.637);
+    border-bottom-right-radius: 5px;
+    border-left: 1px solid black;
+  }
+
+  .expense-delete-btn-left,
+  .expense-delete-btn-right {
+    display: none;
+  }
+
+  .expense-delete-btn {
+    width: 100%;
+    height: 30px;
+    background: rgba(255, 0, 0, 0.788);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    color: rgb(255, 255, 255);
+  }
+
+  .expense-delete-btn-delete {
+    display: flex;
+    justify-content: center;
+    font-size: 18px;
+    height: 100%;
+  }
+
+  .expense-table td::before {
+    content: attr(title);
+    position: absolute;
+    left: 0;
+    width: 50%;
+    padding-left: 15px;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .expense-table {
+    overflow-x: scroll;
+  }
+}
+
+.expense-input-buttons {
+  display: flex;
+}

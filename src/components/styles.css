@@ -1,0 +1,21 @@
+.content {
+  position: fixed;
+  right: 0px;
+  left: 200px;
+  top: 5%;
+  overflow-y: scroll;
+  overflow-x: auto;
+  height: 95%;
+  padding: 0 2rem 2rem;
+  padding-bottom: 8px;
+  background: #f4f4ef;
+}
+
+@media (max-width: 768px) {
+  .content {
+    left: 0;
+  }
+  .side-navigation {
+    display: none;
+  }
+}
