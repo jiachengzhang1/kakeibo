@@ -1,8 +1,19 @@
 import React from "react";
 
-export const Input = ({ name, type, defaultValue, register, min, step }) => {
+export const Input = ({
+  name,
+  type,
+  defaultValue,
+  register,
+  min,
+  step,
+  onClick = (event) => {
+    event.stopPropagation();
+  },
+}) => {
   return (
     <input
+      onClick={onClick}
       type={type}
       name={name}
       defaultValue={defaultValue}

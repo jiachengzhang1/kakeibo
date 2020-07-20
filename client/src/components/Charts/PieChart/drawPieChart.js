@@ -1,4 +1,4 @@
-import { select, arc, pie, entries, scaleOrdinal, svg } from "d3";
+import { select, arc, pie, entries, scaleOrdinal } from "d3";
 
 const getTotalSpending = (data) => {
   let totalSpending = 0;
@@ -50,7 +50,7 @@ const drawLegend = (svg, data_ready, width, height, radius, totalSpending) => {
   } else {
     legendG.attr("transform", function (d, i) {
       let x = width / 2.5,
-        y = height;
+        y = height - 40;
       switch (i) {
         case 0:
           x = width > 480 ? x + 100 : x + 40;
@@ -87,7 +87,7 @@ const drawLegend = (svg, data_ready, width, height, radius, totalSpending) => {
       const text = ` ${percentage}% ${tagMap[d.data.key]}`;
       return text;
     })
-    .style("font-size", radius / 18)
+    .style("font-size", radius / 14)
     .attr("y", 16)
     .attr("x", 25);
 };
@@ -96,8 +96,9 @@ const drawPieChart = (svgRef, { width, height }, data) => {
   const margin = 0;
 
   const svg = select(svgRef.current);
-
-  const radius = Math.min(width, height) / 2 - margin;
+  console.log(width);
+  const radius = 125 - margin;
+  // const radius = Math.min(width, height) / 2 - margin;
 
   const arcGenerator = arc()
     .innerRadius(radius * 0.4)

@@ -52,13 +52,7 @@ const ExpensesTable = ({
                 register={register}
                 control={control}
               />
-            ) : //   <ExpenseForm
-            //     hideCreateExpense={hideCreateExpense}
-            //     updateData={updateData}
-            //     register={register}
-            //     control={control}
-            //   />
-            null}
+            ) : null}
             {expensesTr}
           </tbody>
         </table>

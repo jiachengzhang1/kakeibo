@@ -8,6 +8,8 @@ import { Header, Toolbar } from "./Navigation";
 import Backdrop from "./Backdrop";
 
 import "./styles.css";
+import Income from "pages/Income";
+import Budgets from "pages/Budgets";
 
 const App = () => {
   const [sideDrawOpen, setSideDrawOpen] = useState(false);
@@ -45,6 +47,12 @@ const App = () => {
           <div className="content">
             <Route exact path="/">
               <Expenses />
+            </Route>
+            <Route exact path="/budget">
+              <Budgets />
+            </Route>
+            <Route exact path="/income">
+              <Income />
             </Route>
             <Route exact path="/summary">
               <Summaries />

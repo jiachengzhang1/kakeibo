@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 
 import { getDateString } from "../../utils";
-
-const Tag = ({ type, text }) => {
-  return <span className={`badge badge-pill badge-${type}`}>{text}</span>;
-};
+import Tag from "../../components/Tag";
 
 function getTag(tag) {
   switch (tag) {
@@ -42,7 +39,9 @@ const ExpenseDataRow = ({ expense, updateData, setUpdating, setEdit }) => {
       <td title="Spending">{transactionName}</td>
       <td title="Amount">${amount}</td>
       <td title="Date">{getDateString(formated_date)}</td>
-      <td title="Tag">{getTag(tag)}</td>
+      <td title="Tag">
+        <Tag tag={tag} />
+      </td>
       <td>
         <div className="expense-delete-btn" onClick={handleDelete}>
           <div className="expense-delete-btn-delete">Delete</div>

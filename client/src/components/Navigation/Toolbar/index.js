@@ -16,12 +16,12 @@ export const Toolbar = ({ show, handleToggleOnClick }) => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/" onClick={handleToggleOnClick}>
+            <NavLink to="/income" onClick={handleToggleOnClick}>
               <i className="dollar sign icon"></i>Income
             </NavLink>
           </li>
           <li>
-            <NavLink to="/" onClick={handleToggleOnClick}>
+            <NavLink to="/budget" onClick={handleToggleOnClick}>
               <i className="calculator icon"></i>Budget
             </NavLink>
           </li>

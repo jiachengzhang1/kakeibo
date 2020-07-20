@@ -1,0 +1,29 @@
+.changeable-input input {
+  height: 40px;
+  width: 150px;
+  font-size: 22px;
+  z-index: 10px;
+}
+
+.changeable-input-input input:focus {
+  /* outline: none; */
+}
+
+.changeable-input-input {
+  display: flex;
+  font-size: 30px;
+  justify-content: center;
+  align-items: center;
+}
+
+.changeable-input-input span {
+  margin-right: 6px;
+}
+
+.changeable-input-error {
+  position: absolute;
+  font-size: 12px;
+  color: red;
+  top: 100%;
+  left: 16px;
+}

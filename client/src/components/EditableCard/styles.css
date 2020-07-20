@@ -1,0 +1,128 @@
+.editable-card {
+  position: relative;
+  height: 250px;
+  width: 250px;
+  display: flex;
+  padding: 10px;
+  background: white;
+  box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px, rgba(0, 0, 0, 0.24) 0 1px 2px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  z-index: 200;
+  /* right: 0; */
+}
+
+.editable-card form {
+  width: 100%;
+}
+
+.editable-card:hover {
+  cursor: unset;
+}
+
+.editable-card:focus {
+  /* outline: none; */
+}
+
+.editable-card-title {
+  position: absolute;
+  font-size: 22px;
+  top: 10px;
+  left: 15px;
+  /* box-shadow: rgba(0, 0, 0, 0.3) 0 1px 3px; */
+}
+
+.editable-card-title select {
+  font-size: 18px;
+  box-shadow: none;
+}
+
+.editable-card-content {
+  position: absolute;
+  /* position: relative; */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+}
+
+.editable-card-delete {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  z-index: 10;
+  display: none;
+}
+
+.editable-card:hover {
+  box-shadow: rgba(0, 0, 0, 0.24) -1px 2px 4px, rgba(0, 0, 0, 0.12) 2px 3px 4px;
+}
+
+#editable-card:hover #editable-card-delete {
+  display: block;
+}
+
+.editable-card-delete-btn {
+  display: flex !important;
+  align-items: center;
+  text-align: center;
+  justify-content: center !important;
+  box-shadow: rgba(0, 0, 0, 0.24) -1px 2px 4px, rgba(0, 0, 0, 0.12) 2px 2px 4px !important;
+  background-color: red !important;
+  color: white !important;
+  height: 25px;
+  width: 25px;
+}
+
+/* .editable-card-delete-btn:hover {
+  height: 27px;
+  width: 27px;
+} */
+.editable-card-delete-btn:hover i {
+  font-size: 19px;
+}
+
+.editable-card-delete i {
+  font-size: 18px;
+}
+
+.editable-card-edit {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  /* z-index: 100; */
+}
+
+.editable-card-edit.disabled a {
+  pointer-events: none;
+  color: white;
+  background: #ccc;
+  border-color: #ccc;
+}
+
+.editable-card-edit a {
+  border: 1px solid #17a3b893;
+  width: 50px;
+  /* font-size: 16px; */
+  border-radius: 5px;
+  background: none;
+  color: #17a2b8;
+  padding: 5px 10px;
+}
+
+.editable-card-edit a:hover {
+  background: #17a2b8;
+  color: white;
+  cursor: pointer;
+}
+
+@media (max-width: 584px) {
+  .editable-card {
+    width: 320px;
+    height: 230px;
+  }
+}
+@media (max-width: 320px) {
+  .editable-card {
+    width: 290px;
+  }
+}
