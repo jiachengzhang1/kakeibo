@@ -1,8 +1,8 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+
+import TableHeader from "@components/TableHeader";
 
 import Expense from "./Expense";
-import TableHeader from "../../components/TableHeader";
 import ExpenseInputRow from "./ExpenseInputRow";
 
 const tableHeads = ["Spending", "Amount", "Date", "Tag", ""];
@@ -15,8 +15,6 @@ const ExpensesTable = ({
   updating,
   setUpdating,
 }) => {
-  const { register, handleSubmit, control, errors } = useForm();
-
   const expensesTr = expenses.map((expense) => {
     return (
       <Expense
@@ -26,31 +24,21 @@ const ExpensesTable = ({
         updating={updating}
         setUpdating={setUpdating}
         hideCreateExpense={hideCreateExpense}
-        register={register}
-        control={control}
       />
     );
   });
 
-  const onSubmitForm = async ({ id, ...rest }) => {
-    const action = id === "new" ? "CREATE_ONE" : "UPDATE_ONE";
-    const payload = { id: id, data: rest };
-    await updateData({ action: action, payload: payload });
-    setUpdating(false);
-    hideCreateExpense();
-  };
-
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmitForm)} id="new-expense">
+      <form id="new-expense">
         <table className="expense-table">
           <TableHeader tableHeads={tableHeads} />
           <tbody>
             {createExpense ? (
               <ExpenseInputRow
                 hideCreateExpense={hideCreateExpense}
-                register={register}
-                control={control}
+                updateData={updateData}
+                setUpdating={setUpdating}
               />
             ) : null}
             {expensesTr}

@@ -1,68 +1,36 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 
-import PageHeader from "components/PageHeader";
+import PageHeader from "@components/PageHeader";
+import { MONTH_MAP } from "@utils/constants";
+import { deleteObjectById, updateObjectById } from "@utils";
+import { fetchBudgets, updateBudget, deleteBudget, createBudget } from "@api";
 
 import BudgetCards from "./BudgetCards";
 import CreateBudget from "./CreateBudget";
-import { MONTH_MAP } from "../../utils/constants";
 
 import "./styles.css";
 
-const updateObjectById = (array, object) => {
-  const index = array.findIndex((element) => element._id === object._id);
-  const element = { ...array[index], ...object };
-  return [...array.slice(0, index), ...[element], ...array.slice(index + 1)];
-};
-
-const deleteObjectById = (array, id) => {
-  const index = array.findIndex((element) => element._id === id);
-  return [...array.slice(0, index), ...array.slice(index + 1)];
-};
-
 const Budgets = () => {
+  // TODO: select current month
   const currentDate = new Date();
 
   const [budgets, setBudgets] = useState([]);
-  const [currentMonth, setCurrentMonth] = useState(
-    currentDate.getUTCMonth() + 1
-  );
-  const [currentYear, setCurrentYear] = useState(currentDate.getUTCFullYear());
-
+  const [availableTags, setAvailableTags] = useState([]);
   const [creatingNewBudget, setCreatingNewBudget] = useState(false);
 
-  const [availableTags, setAvailableTags] = useState([]);
+  const [selectedYearMonth, setSelectedYearMonth] = useState({
+    selectedYear: currentDate.getUTCFullYear(),
+    selectedMonth: currentDate.getUTCMonth() + 1,
+  });
+  const { selectedYear, selectedMonth } = selectedYearMonth;
 
   const fetchData = async () => {
-    const response = await axios.get(
-      `http://localhost:5000/budgets/${currentYear}/${currentMonth}`
+    const { budgetData, allTags } = await fetchBudgets(
+      selectedYear,
+      selectedMonth
     );
-
-    const budgetData = [];
-    const allTags = ["living", "culture", "entertainment", "others"];
-
-    response.data.forEach(({ _id, year, month, tag, amount }) => {
-      budgetData.push({ _id, year, month, tag, amount });
-      allTags.splice(allTags.indexOf(tag), 1);
-    });
     setAvailableTags(allTags);
     setBudgets(budgetData);
-  };
-
-  const updateData = async (id, data) => {
-    await axios.put(`http://localhost:5000/budgets/${id}`, data);
-    fetchData();
-  };
-
-  const deleteData = async (id) => {
-    // console.log(id);
-    const response = await axios.delete(`http://localhost:5000/budgets/${id}`);
-    await fetchData();
-  };
-
-  const createData = async (data) => {
-    const response = await axios.post("http://localhost:5000/budgets", data);
-    await fetchData();
   };
 
   useEffect(() => {
@@ -77,7 +45,8 @@ const Budgets = () => {
     const updatedBudgets = updateObjectById(budgets, newBudgetObject);
     setBudgets(updatedBudgets);
 
-    await updateData(id, newBudgetObject);
+    await updateBudget(id, newBudgetObject);
+    await fetchData();
   };
 
   const handleBudgetDelete = async (id) => {
@@ -89,17 +58,19 @@ const Budgets = () => {
     const updatedBudgets = deleteObjectById(budgets, id);
     setBudgets(updatedBudgets);
 
-    await deleteData(id);
+    await deleteBudget(id);
+    await fetchData();
   };
 
   const handleBudgetCreate = async ({ tag, amount }) => {
     const newBudget = {
-      year: currentYear,
-      month: currentMonth,
+      year: selectedYear,
+      month: selectedMonth,
       tag,
       amount,
     };
-    await createData(newBudget);
+    await createBudget(newBudget);
+    await fetchData();
     setCreatingNewBudget(false);
   };
 
@@ -117,7 +88,7 @@ const Budgets = () => {
     <div>
       <PageHeader option="Monthly Budgets" icon="calculator sign" />
       <div className="budget-select">
-        <h5>Current month: {`${MONTH_MAP[currentMonth]}, ${currentYear}`}</h5>
+        <h5>Current month: {`${MONTH_MAP[selectedMonth]}, ${selectedYear}`}</h5>
         <button
           onClick={() => setCreatingNewBudget(true)}
           className={`create-budget ${

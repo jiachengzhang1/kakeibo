@@ -1,20 +1,21 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 
-import { Input, Select, DataPicker } from "../../components/FormElements";
+import { Input, Select, DataPicker } from "@components/FormElements";
+import { TAG_MAP } from "@utils/constants";
 
-const tagOptions = [
-  { key: "living", value: "living", text: "Expenses on Living" },
-  { key: "culture", value: "culture", text: "Culture and Education" },
-  { key: "entertainment", value: "entertainment", text: "Entertainment" },
-  { key: "others", value: "others", text: "Others" },
-];
+const tagOptions = Object.keys(TAG_MAP).map((tag) => ({
+  key: tag,
+  value: tag,
+  text: TAG_MAP[tag].text,
+}));
 
 const ExpenseInputRow = ({
   hideEdit,
   hideCreateExpense,
+  updateData,
+  setUpdating,
   expense = {},
-  register,
-  control,
 }) => {
   const {
     _id = "new",
@@ -23,6 +24,35 @@ const ExpenseInputRow = ({
     formated_date = null,
     tag = "living",
   } = expense;
+
+  const { register, handleSubmit, control } = useForm();
+
+  const expenseUnchanged = (expense) => {
+    return (
+      expense.transactionName === transactionName &&
+      expense.amount === amount.toString() &&
+      expense.tag === tag &&
+      expense.formated_date === undefined
+    );
+  };
+
+  const hideInputFields = () => {
+    setUpdating(false);
+    hideCreateExpense();
+    if (hideEdit) {
+      hideEdit();
+    }
+  };
+
+  const onSubmitForm = async ({ id, ...rest }) => {
+    if (!expenseUnchanged(rest)) {
+      const action = id === "new" ? "CREATE_ONE" : "UPDATE_ONE";
+      const payload = { id: id, data: rest };
+      await updateData({ action: action, payload: payload });
+    }
+
+    hideInputFields();
+  };
 
   return (
     <tr className="expense-input-row">
@@ -67,6 +97,7 @@ const ExpenseInputRow = ({
             className="expense-form-save-btn"
             type="submit"
             form="new-expense"
+            onClick={handleSubmit(onSubmitForm)}
           >
             Save
           </button>

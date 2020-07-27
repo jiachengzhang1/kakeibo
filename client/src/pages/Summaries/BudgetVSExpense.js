@@ -1,28 +1,24 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { GroupedBarChart } from "../../components/Charts/GroupedBarChart";
 
-const BudgetVSExpense = () => {
+import { GroupedBarChart } from "@components/Charts/GroupedBarChart";
+import { fetchBudgetVSExpenseSummary } from "@api";
+
+const BudgetVSExpense = ({
+  selectedYearMonth: { selectedYear, selectedMonth },
+}) => {
   const [chartData, setChartData] = useState({});
 
   useEffect(() => {
     const fetchChartData = async () => {
-      const response = await axios.get(
-        "http://localhost:5000/summaries/budgets"
+      const data = await fetchBudgetVSExpenseSummary(
+        selectedYear,
+        selectedMonth
       );
-
-      //   const data = {};
-      //   console.log(response.data);
-      //   response.data.forEach(({ _id, totalAmount }) => {
-      //     data[_id] = totalAmount;
-      //   });
-
-      setChartData(response.data);
+      setChartData(data);
     };
     fetchChartData();
   }, []);
 
-  //   console.log(chartData);
   return (
     <div className="budget-vs-expense">
       <h3>Budget VS Expense</h3>

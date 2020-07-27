@@ -1,23 +1,23 @@
 import React from "react";
 import { Select } from "semantic-ui-react";
-import "./ExpenseOptions.css";
 
 import MonthSelector from "../../components/MonthSelector";
+import { EXPENSES_PER_PAGE } from "../../utils/constants";
+import "./ExpenseOptions.css";
 
 const ExpenseOptions = ({
-  selectedYearState,
-  selectedMonthState,
+  selectedYearMonth,
+  updateYearMonth,
   yearsWithMonths,
   setExpensesPerPage,
-  setSelectedYearState,
-  setSelectedMonthState,
   showCreateExpense,
 }) => {
-  const expensesPerPage = [
-    { key: "15", text: "15", value: 15 },
-    { key: "30", text: "30", value: 30 },
-    { key: "60", text: "60", value: 60 },
-  ];
+  const expensesPerPageOptions = EXPENSES_PER_PAGE.map((num) => ({
+    key: num,
+    text: num,
+    value: num,
+  }));
+
   return (
     <div className="expense-options">
       <div className="create-expense">
@@ -29,18 +29,16 @@ const ExpenseOptions = ({
         <Select
           className="expesens-per-page"
           compact
-          options={expensesPerPage}
+          options={expensesPerPageOptions}
           defaultValue={15}
           onChange={(event, { value }) => {
             setExpensesPerPage(value);
           }}
         />
         <MonthSelector
-          selectedYearState={selectedYearState}
-          selectedMonthState={selectedMonthState}
+          selectedYearMonth={selectedYearMonth}
+          updateYearMonth={updateYearMonth}
           yearsWithMonths={yearsWithMonths}
-          setSelectedYearState={setSelectedYearState}
-          setSelectedMonthState={setSelectedMonthState}
         />
       </div>
     </div>

@@ -4,7 +4,6 @@ import {
   scaleLinear,
   scaleOrdinal,
   axisBottom,
-  axisLeft,
   max,
   axisRight,
 } from "d3";
@@ -12,18 +11,15 @@ import { TAG_MAP } from "../../../utils/constants";
 
 const drawGroupedBarChart = (svgRef, { width, height }, data) => {
   const chartWidth = width,
-    barPadding = 0.1;
+    barPadding = 0.3;
   const axisTicks = { qty: 5, outerSize: 0, dateFormat: "%m-%d" };
   const margin = { top: 10, right: 10, bottom: 10, left: 10 };
   const svg = select(svgRef.current);
 
   let chartHeight = 350;
 
-  //   svg.selectAll("g").remove();
 
   svg.attr("width", chartWidth).attr("height", chartHeight);
-  // .append("g")
-  // .attr("transform", `translate(${200}px,${-10}px)`);
 
   const color = scaleOrdinal()
     .domain(["expense", "budget"])
@@ -122,24 +118,6 @@ const drawGroupedBarChart = (svgRef, { width, height }, data) => {
     .call(xAxis);
 
   svg.select(".y-axis").call(yAxis);
-
-  //   legendG
-  //     .append("rect")
-  //     .attr("width", 15)
-  //     .attr("height", 15)
-  //     .attr("fill", color("expense"));
-
-  //   legendG
-  //     .append("text")
-  //     .attr("font-weight", 600)
-  //     .text(function (d) {
-  //       const percentage = ((d.data.value / totalSpending) * 100).toFixed(0);
-  //       const text = ` ${percentage}% ${tagMap[d.data.key]}`;
-  //       return text;
-  //     })
-  //     .style("font-size", radius / 18)
-  //     .attr("y", 16)
-  //     .attr("x", 25);
 };
 
 export default drawGroupedBarChart;

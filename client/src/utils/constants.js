@@ -1,3 +1,5 @@
+export const EXPENSES_PER_PAGE = [15, 30, 60];
+
 export const TAG_MAP = {
   living: {
     text: "Expenses on Living",

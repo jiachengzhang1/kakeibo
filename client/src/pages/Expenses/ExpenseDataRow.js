@@ -1,28 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { getDateString } from "../../utils";
 import Tag from "../../components/Tag";
 
-function getTag(tag) {
-  switch (tag) {
-    case "living":
-      return <Tag type="primary" text="Expenses on Living" />;
-    case "culture":
-      return <Tag type="success" text="Culture and Education" />;
-    case "entertainment":
-      return <Tag type="warning" text="Entertainment" />;
-    default:
-      return <Tag type="info" text="Others" />;
-  }
-}
-
-// async function handleDeleteButtonOnClick(id, updateData) {
-//   await updateData({ action: "DELETE_ONE", payload: { id } });
-// }
 
 const ExpenseDataRow = ({ expense, updateData, setUpdating, setEdit }) => {
   const { _id, transactionName, amount, formated_date, tag } = expense;
-  //   const [edit, setEdit] = useState(false);
 
   const handleDelete = async (event) => {
     event.stopPropagation();

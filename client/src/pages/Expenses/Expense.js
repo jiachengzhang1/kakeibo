@@ -9,10 +9,7 @@ const Expense = ({
   updating,
   setUpdating,
   hideCreateExpense,
-  register,
-  control,
 }) => {
-  //   const { _id, transactionName, amount, formated_date, tag } = expense;
   const [edit, setEdit] = useState(false);
 
   return edit && updating ? (
@@ -22,9 +19,9 @@ const Expense = ({
         setUpdating(false);
       }}
       hideCreateExpense={hideCreateExpense}
+      setUpdating={setUpdating}
+      updateData={updateData}
       expense={expense}
-      register={register}
-      control={control}
     />
   ) : (
     <ExpenseDataRow

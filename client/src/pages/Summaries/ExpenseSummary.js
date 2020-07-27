@@ -1,23 +1,18 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
+import { fetchExpenseSummary } from "@api";
 import { PieChart } from "@components/Charts";
 
 import "./ExpenseSummary.css";
 
-const ExpenseSummary = () => {
+const ExpenseSummary = ({
+  selectedYearMonth: { selectedYear, selectedMonth },
+}) => {
   const [chartData, setChartData] = useState({});
 
   useEffect(() => {
     const fetchChartData = async () => {
-      const response = await axios.get(
-        "http://localhost:5000/summaries/expenses"
-      );
-
-      const data = {};
-      response.data.spendingSummary.forEach(({ _id, totalAmount }) => {
-        data[_id] = totalAmount;
-      });
+      const data = await fetchExpenseSummary(selectedYear, selectedMonth);
 
       setChartData(data);
     };
