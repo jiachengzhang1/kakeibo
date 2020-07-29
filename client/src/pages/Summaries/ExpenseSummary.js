@@ -9,7 +9,6 @@ const ExpenseSummary = ({
   selectedYearMonth: { selectedYear, selectedMonth },
 }) => {
   const [chartData, setChartData] = useState({});
-
   useEffect(() => {
     const fetchChartData = async () => {
       const data = await fetchExpenseSummary(selectedYear, selectedMonth);
@@ -17,7 +16,7 @@ const ExpenseSummary = ({
       setChartData(data);
     };
     fetchChartData();
-  }, []);
+  }, [selectedMonth, selectedYear]);
 
   return (
     <div className="expense-summary">

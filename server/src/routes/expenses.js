@@ -1,8 +1,8 @@
 const express = require("express");
 const Expense = require("../models/Expense");
+const getYearsWithMonths = require("./sharedFunctions/getYearsWithMonths");
 
 const router = express.Router();
-
 const defaultQuery = {},
   defaultOption = {};
 
@@ -93,7 +93,7 @@ async function getExpensesWithYearsAndMonths(query, options) {
   const expenses = await getExpenses(query, options);
   const uniqueYears = await Expense.find().distinct("year");
   // console.log(uniqueYears);
-  const yearsWithMonths = await getYearsWithMonths(uniqueYears);
+  const yearsWithMonths = await getYearsWithMonths(uniqueYears, Expense);
   return { yearsWithMonths, expenses };
 }
 
@@ -170,23 +170,6 @@ async function deleteExpense(id) {
   } catch (error) {
     throw new Error(error);
   }
-}
-
-async function getYearsWithMonths(uniqueYears) {
-  const promises = uniqueYears.map(async (uniqueYear) => {
-    const yearsWithMonths = await Expense.aggregate([
-      { $match: { year: uniqueYear } },
-      { $group: { _id: "$year", months: { $addToSet: "$month" } } },
-    ]);
-
-    return yearsWithMonths.map(({ _id, months }) => ({
-      year: _id,
-      months: months.sort((a, b) => b - a),
-    }));
-  });
-
-  const years = await Promise.all(promises);
-  return [].concat.apply([], years).sort((a, b) => b.year - a.year);
 }
 
 module.exports = router;

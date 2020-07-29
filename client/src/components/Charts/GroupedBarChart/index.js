@@ -6,7 +6,7 @@ import drawGroupedBarChart from "./drawGroupedBarChart";
 import "./styles.css";
 
 export const GroupedBarChart = ({ data }) => {
-  console.log(data);
+  // console.log(data);
   const svgRef = useRef();
   const wrapperRef = useRef();
 

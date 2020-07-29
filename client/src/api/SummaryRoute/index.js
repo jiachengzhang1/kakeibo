@@ -1,4 +1,7 @@
 import kakeiboAPI from "@api/kakeiboAPI";
+import axios from "axios";
+
+export const cancelToken = axios.CancelToken.source();
 
 export const fetchExpenseSummary = async (selectedYear, selectedMonth) => {
   const response = await kakeiboAPI.get(
@@ -20,5 +23,12 @@ export const fetchBudgetVSExpenseSummary = async (
   const response = await kakeiboAPI.get(
     `/summaries/budgets/${selectedYear}/${selectedMonth}`
   );
+  return response.data;
+};
+
+export const fetchYearsWithMonths = async () => {
+  const response = await kakeiboAPI.get(`/summaries/months`, {
+    cancelToken: cancelToken.token,
+  });
   return response.data;
 };

@@ -17,7 +17,7 @@ const BudgetVSExpense = ({
       setChartData(data);
     };
     fetchChartData();
-  }, []);
+  }, [selectedYear, selectedMonth]);
 
   return (
     <div className="budget-vs-expense">

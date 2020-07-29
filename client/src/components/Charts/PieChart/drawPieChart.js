@@ -96,7 +96,7 @@ const drawPieChart = (svgRef, { width, height }, data) => {
   const margin = 0;
 
   const svg = select(svgRef.current);
-  console.log(width);
+  // console.log(width);
   const radius = 125 - margin;
   // const radius = Math.min(width, height) / 2 - margin;
 

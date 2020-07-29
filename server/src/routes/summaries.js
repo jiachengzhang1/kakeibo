@@ -2,6 +2,9 @@ const express = require("express");
 const Expense = require("../models/Expense");
 const Budget = require("../models/Budget");
 
+const getYearsWithMonths = require("./sharedFunctions/getYearsWithMonths");
+const { response } = require("express");
+
 const router = express.Router();
 
 router.get("/expenses/:year?/:month?", async (req, res) => {
@@ -112,27 +115,80 @@ router.get("/budgets/:year?/:month?", async (req, res) => {
 
       response.push({ tag: _id, expense, budget });
     }
-
-    console.log(response);
-
-    // expenseResponse.map(({ _id, totalAmount }, i) => {
-    //   const budget = budgetResponse[i];
-    //   if (budget._id !== _id) {
-    //     throw new Error("Expense and budget don't match.");
-    //   }
-
-    //   const budgetExpense = {
-    //     tag: _id,
-    //     budget: budget.totalAmount,
-    //     expense: totalAmount,
-    //   };
-
-    //   response.push(budgetExpense);
-    // });
     res.status(200).send(response);
   } catch (error) {
     res.status(400).json({ error: error.toString() });
   }
 });
+
+router.get("/months", async (req, res) => {
+  try {
+    const yearsWithMonths = await getYearMonth();
+    res.status(200).send(yearsWithMonths);
+  } catch (error) {
+    res.status(400).json({ error: error.toString() });
+  }
+});
+
+async function getYearMonth() {
+  try {
+    const expenseUniqueYears = await Expense.find().distinct("year");
+    const budgetUniqueYears = await Budget.find().distinct("year");
+
+    const uniqueYearsSet = new Set([
+      ...expenseUniqueYears,
+      ...budgetUniqueYears,
+    ]);
+    const uniqueYears = [...uniqueYearsSet];
+
+    const expensesYearsWithMonths = await getYearsWithMonths(
+      uniqueYears,
+      Expense
+    );
+    const budgetsYearsWithMonths = await getYearsWithMonths(
+      uniqueYears,
+      Budget
+    );
+
+    return mergeYearsMonths(expensesYearsWithMonths, budgetsYearsWithMonths);
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+function mergeYearsMonths(arr1, arr2) {
+  let i = 0,
+    j = 0;
+  const res = [],
+    length1 = arr1.length,
+    length2 = arr2.length;
+  while (i < length1 && j < length2) {
+    const { year: year1, months: months1 } = arr1[i];
+    const { year: year2, months: months2 } = arr2[j];
+
+    if (year1 === year2) {
+      const mergedMonths = [...new Set([...months1, ...months2])].sort(
+        (a, b) => b - a
+      );
+
+      res.push({ year: year1, months: mergedMonths });
+      i++;
+      j++;
+    } else if (year1 < year2) {
+      res.push(arr1[i++]);
+    } else {
+      res.push(arr2[j++]);
+    }
+  }
+
+  while (i < length1) {
+    res.push(arr1[i++]);
+  }
+  while (j < length2) {
+    res.push(arr2[j++]);
+  }
+
+  return res;
+}
 
 module.exports = router;

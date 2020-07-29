@@ -18,7 +18,6 @@ const drawGroupedBarChart = (svgRef, { width, height }, data) => {
 
   let chartHeight = 350;
 
-
   svg.attr("width", chartWidth).attr("height", chartHeight);
 
   const color = scaleOrdinal()
@@ -34,7 +33,7 @@ const drawGroupedBarChart = (svgRef, { width, height }, data) => {
     .domain(["expense", "budget"])
     .range([0, xScale0.bandwidth()]);
 
-  console.log(xScale1.bandwidth());
+  // console.log(xScale1.bandwidth());
 
   const yScale = scaleLinear().range([
     chartHeight - margin.top - margin.bottom,

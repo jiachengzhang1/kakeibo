@@ -1,18 +1,23 @@
 import React from "react";
 import { Select } from "semantic-ui-react";
 
-import { MONTH_MAP } from "../../utils/constants";
+import { MONTH_MAP } from "@utils/constants";
 import "./styles.css";
 
 const MonthSelector = ({
   selectedYearMonth,
   updateYearMonth,
   yearsWithMonths,
+  disableAllOption = false,
 }) => {
   const { selectedYear, selectedMonth } = selectedYearMonth;
 
-  const years = [{ key: 0, text: "All Years", value: 0 }];
-  const monthOptions = [{ key: 0, text: "All months", value: 0 }];
+  const years = disableAllOption
+    ? []
+    : [{ key: 0, text: "All Years", value: 0 }];
+  const monthOptions = disableAllOption
+    ? []
+    : [{ key: 0, text: "All months", value: 0 }];
 
   yearsWithMonths.forEach(({ year, months }) => {
     years.push({
@@ -32,6 +37,14 @@ const MonthSelector = ({
     }
   });
 
+  const findFirstMonthOfYear = (targetYear) => {
+    for (let i = 0; i < yearsWithMonths.length; i++) {
+      const { year, months } = yearsWithMonths[i];
+      if (year === targetYear) return months[0];
+    }
+    return -1; // no such year
+  };
+
   return (
     <div className="month-selector">
       <Select
@@ -39,7 +52,18 @@ const MonthSelector = ({
         compact
         options={years}
         onChange={(event, { value }) => {
-          updateYearMonth({ selectedYear: value, selectedMonth: 0 });
+          const newSelectedYearMonth = {
+            selectedYear: value,
+            selectedMonth: 0,
+          };
+          if (disableAllOption) {
+            const month = findFirstMonthOfYear(value);
+            if (month !== -1) {
+              newSelectedYearMonth.selectedMonth = month;
+            }
+          }
+
+          updateYearMonth(newSelectedYearMonth);
         }}
         value={selectedYear}
       />
