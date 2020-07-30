@@ -4,74 +4,10 @@ import UserContext from "../../context/UserContext";
 import { useHistory } from "react-router-dom";
 
 import "./styles.css";
-
-const ErrorMessage = ({ message = "" }) => {
-  return (
-    <div className="authentication-error">
-      <span>{message}</span>
-    </div>
-  );
-};
-
-const AuthField = ({
-  label,
-  onChange,
-  value,
-  type,
-  required = false,
-  error = "",
-}) => {
-  return (
-    <>
-      <label
-        htmlFor={`authentication-${label.replace(" ", "").toLowerCase()}`}
-        className={required ? "authentication-required" : ""}
-      >
-        {label}
-      </label>
-      <input
-        id={`authentication-${label.replace(" ", "").toLowerCase()}`}
-        type={type}
-        value={value}
-        onChange={onChange}
-      />
-      <ErrorMessage message={error} />
-    </>
-  );
-};
-
-const AuthFooter = ({ title, actionName, onClick }) => {
-  return (
-    <div>
-      {title}
-      <span onClick={onClick} className="authentication-footer-action">
-        {actionName}
-      </span>
-    </div>
-  );
-};
-
-const getError = (error) => {
-  switch (error.tag) {
-    case "missing":
-      setErrorMessage({ main: error.message });
-      break;
-    case "userName":
-      setErrorMessage({ userName: error.message });
-      break;
-    case "password":
-      setErrorMessage({ password: error.message });
-      break;
-    case "passwordCheck":
-      setErrorMessage({ passwordCheck: error.message });
-      break;
-    case "faild":
-      setErrorMessage({ main: error.message });
-      break;
-    default:
-      break;
-  }
-};
+import AuthField from "./AuthField";
+import AuthFooter from "./AuthFooter";
+import ErrorMessage from "./ErrorMessage";
+import { getError, validate } from "./helpers";
 
 const Authentication = ({ isRegister = false }) => {
   const [userName, setUserName] = useState("");
@@ -84,44 +20,13 @@ const Authentication = ({ isRegister = false }) => {
 
   const history = useHistory();
 
-  const validate = () => {
-    let valid = true,
-      error = {};
-    if (!userName) {
-      error.userName = "User name is required.";
-      valid = false;
-    }
-
-    if (!password) {
-      error.password = "Password is required.";
-      valid = false;
-    } else if (password.length < 6) {
-      error.password = "Password needs at least 6 characters long.";
-      valid = false;
-    }
-
-    if (isRegister && !passwordCheck) {
-      error.passwordCheck = "Verify password is required.";
-      valid = false;
-    } else if (
-      isRegister &&
-      passwordCheck &&
-      password &&
-      password !== passwordCheck
-    ) {
-      error.passwordCheck = "Doesn't match the password.";
-      valid = false;
-    }
-    setErrorMessage(error);
-
-    return valid;
-  };
-
   const submit = async (e) => {
     e.preventDefault();
 
     try {
-      if (validate()) {
+      if (
+        validate(userName, password, passwordCheck, isRegister, setErrorMessage)
+      ) {
         // send request
         const user = isRegister
           ? { userName, password, passwordCheck }
@@ -140,7 +45,7 @@ const Authentication = ({ isRegister = false }) => {
         history.push("/");
       }
     } catch (error) {
-      getError(error.response.data);
+      getError(error.response.data, setErrorMessage);
     }
   };
   const title = isRegister ? "Register" : "Login";
