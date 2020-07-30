@@ -7,7 +7,7 @@ export const expenseRequest = async (
   year = 0,
   month = 0
 ) => {
-  const { action, payload } = request;
+  const { action, payload, token } = request;
 
   const query = {};
 
@@ -29,7 +29,9 @@ export const expenseRequest = async (
       sort: { formated_date: "desc", date_created: "desc" },
     },
   };
-  const response = await kakeiboAPI.post("/expenses", body);
+  const response = await kakeiboAPI.post("/expenses", body, {
+    headers: { "x-auth-token": token },
+  });
 
   return response.data;
 };

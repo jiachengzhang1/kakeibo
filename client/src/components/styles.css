@@ -11,6 +11,10 @@
   background: #f4f4ef;
 }
 
+.content.auth {
+  left: 0;
+}
+
 @media (max-width: 768px) {
   .content {
     left: 0;

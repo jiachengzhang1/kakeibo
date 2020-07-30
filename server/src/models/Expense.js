@@ -5,7 +5,7 @@ const expenseSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    default: "jack",
+    required: true,
   },
   transactionName: {
     type: String,

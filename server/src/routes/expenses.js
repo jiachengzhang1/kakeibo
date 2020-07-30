@@ -1,6 +1,7 @@
 const express = require("express");
 const Expense = require("../models/Expense");
 const getYearsWithMonths = require("./sharedFunctions/getYearsWithMonths");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 const defaultQuery = {},
@@ -16,15 +17,16 @@ router.post("/", async (req, res) => {
   let response = null,
     status = 200;
   try {
+    const queryOfUser = { ...query, ...{ username: req.user } };
     switch (action) {
       // get expenses
       case "GET_EXPENSES":
-        response = await getExpenses(query, options);
+        response = await getExpenses(queryOfUser, options);
         break;
 
       // get expenses and unique years with unique months of all expenses
       case "GET_EXPENSES_WITH_YEARS_AND_MONTHS":
-        response = await getExpensesWithYearsAndMonths(query, options);
+        response = await getExpensesWithYearsAndMonths(queryOfUser, options);
         break;
 
       // create an expense
@@ -32,10 +34,10 @@ router.post("/", async (req, res) => {
         if (!payload.data) {
           throw new Error("Something is wrong!");
         }
+        payload.data.username = req.user;
         const createStatus = await createExpense(payload.data);
         if (createStatus === 200) {
-          response = await getExpensesWithYearsAndMonths(query, options);
-          // console.log(response);
+          response = await getExpensesWithYearsAndMonths(queryOfUser, options);
         }
         status = createStatus;
         break;
@@ -45,10 +47,9 @@ router.post("/", async (req, res) => {
         if (!payload.id || !payload.data) {
           throw new Error("Something is wrong!");
         }
-
         const updateStatus = await updateExpense(payload.id, payload.data);
         if (updateStatus === 200) {
-          response = await getExpensesWithYearsAndMonths(query, options);
+          response = await getExpensesWithYearsAndMonths(queryOfUser, options);
         }
         status = updateStatus;
         break;
@@ -61,7 +62,7 @@ router.post("/", async (req, res) => {
 
         const deleteStatus = await deleteExpense(payload.id);
         if (deleteStatus === 200) {
-          response = await getExpensesWithYearsAndMonths(query, options);
+          response = await getExpensesWithYearsAndMonths(queryOfUser, options);
           // console.log(response);
         } else if (deleteStatus === 204) {
           response = "No change is made!";
@@ -75,7 +76,7 @@ router.post("/", async (req, res) => {
     }
     res.status(status).send(response);
   } catch (error) {
-    res.status(400).json({ error: error.toString() });
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -90,6 +91,7 @@ async function getExpenses(query, options) {
 }
 
 async function getExpensesWithYearsAndMonths(query, options) {
+  console.log(query);
   const expenses = await getExpenses(query, options);
   const uniqueYears = await Expense.find().distinct("year");
   // console.log(uniqueYears);
@@ -99,7 +101,7 @@ async function getExpensesWithYearsAndMonths(query, options) {
 
 async function createExpense(data) {
   try {
-    // console.log(data);
+    console.log(data);
     const formated_date = new Date(data.formated_date);
     const year = formated_date.getUTCFullYear(),
       month = formated_date.getUTCMonth() + 1,
@@ -111,6 +113,7 @@ async function createExpense(data) {
       month,
       date,
       day,
+
       ...data,
     });
 

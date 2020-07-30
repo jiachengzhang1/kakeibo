@@ -1,65 +1,52 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 
-import Expenses from "../pages/Expenses";
-import Summaries from "../pages/Summaries";
+import UserContext from "../context/UserContext";
+import axios from "axios";
 
-import { Header, Toolbar } from "./Navigation";
-import Backdrop from "./Backdrop";
+import AuthWrapper from "./AuthWrapper";
 
 import "./styles.css";
-import Income from "pages/Income";
-import Budgets from "pages/Budgets";
 
 const App = () => {
-  const [sideDrawOpen, setSideDrawOpen] = useState(false);
+  const [userData, setUserData] = useState({});
 
-  const handleToggleOnClick = () => {
-    setSideDrawOpen((prevState) => {
-      return !prevState;
-    });
+  const checkLoggedIn = async () => {
+    const token = localStorage.getItem("auth-token");
+    if (token) {
+      // console.log(token);
+      const response = await axios.post(
+        "http://localhost:5000/users/tokenIsValid",
+        {},
+        { headers: { "x-auth-token": token } }
+      );
+      // console.log(response.data);
+      if (response.data) {
+        const userResponse = await axios.get("http://localhost:5000/users/", {
+          headers: { "x-auth-token": token },
+        });
+        setUserData({
+          token,
+          user: userResponse.data,
+        });
+        // console.log(userResponse);
+      }
+    }
   };
 
-  const handleBackdropOnClick = () => setSideDrawOpen(false);
+  useEffect(() => {
+    checkLoggedIn();
+  }, []);
 
-  const backdrop = sideDrawOpen ? (
-    <Backdrop handleBackdropOnClick={handleBackdropOnClick} />
-  ) : null;
+  const authenticated = userData.user !== undefined;
 
   return (
     <div>
-      <Header
-        handleToggleOnClick={handleToggleOnClick}
-        sideDrawOpen={sideDrawOpen}
-      />
-      <div className="container-fluid body">
-        <Router>
-          <div className="side-drawer">
-            <Toolbar
-              show={sideDrawOpen}
-              handleToggleOnClick={handleToggleOnClick}
-            />
-          </div>
-          <div className="side-navigation">
-            <Toolbar show />
-          </div>
-          {backdrop}
-          <div className="content">
-            <Route exact path="/">
-              <Expenses />
-            </Route>
-            <Route exact path="/budget">
-              <Budgets />
-            </Route>
-            <Route exact path="/income">
-              <Income />
-            </Route>
-            <Route exact path="/summary">
-              <Summaries />
-            </Route>
-          </div>
-        </Router>
-      </div>
+      <Router>
+        <UserContext.Provider value={{ userData, setUserData }}>
+          <AuthWrapper authenticated={authenticated} />
+        </UserContext.Provider>
+      </Router>
     </div>
   );
 };

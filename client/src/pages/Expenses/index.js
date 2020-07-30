@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 
 import { expenseRequest } from "@api/ExpenseRoute";
 import Pagination from "@components/Pagination";
@@ -9,11 +9,18 @@ import ExpensesTable from "./ExpensesTable";
 import ExpenseOptions from "./ExpenseOptions";
 
 import "./Expenses.css";
+import UserContext from "../../context/UserContext";
 
 const DEFAULT_EXPENSES_PAGE = 1;
 const DEFAULT_EXPENSES_PER_PAGE = 15;
 
 const Expenses = () => {
+
+  const {userData, setUserData} = useContext(UserContext);
+  // console.log(userData);
+  const {token, user} = userData;
+
+
   // state of all expenses showing on this page
   const [expensesState, setExpensesState] = useState([]);
 
@@ -49,22 +56,24 @@ const Expenses = () => {
     year = selectedYear,
     month = selectedMonth
   ) => {
-    try {
-      const {
-        expenses: { docs, totalPages },
-        yearsWithMonths,
-      } = await expenseRequest(request, page, limit, year, month);
-      totalPagesRef.current = totalPages;
-      yearsWithMonthsRef.current = yearsWithMonths;
-      setExpensesState(docs);
-    } catch (error) {
-      console.error(error);
+    if (token && user) {
+      try {
+        const {
+          expenses: { docs, totalPages },
+          yearsWithMonths,
+        } = await expenseRequest({ ...request, ...userData }, page, limit, year, month);
+        totalPagesRef.current = totalPages;
+        yearsWithMonthsRef.current = yearsWithMonths;
+        setExpensesState(docs);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
   useEffect(() => {
     expenseAPIRequest();
-  }, [currentPageState, expensesPerPageState, selectedYearMonth]);
+  }, [currentPageState, expensesPerPageState, selectedYearMonth, userData]);
 
   const expenseTable = !expensesState ? (
     <h2>Loading</h2>

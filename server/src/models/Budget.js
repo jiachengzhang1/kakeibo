@@ -5,7 +5,7 @@ const budgetSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    default: "jack",
+    required: true,
   },
   tag: {
     type: String,

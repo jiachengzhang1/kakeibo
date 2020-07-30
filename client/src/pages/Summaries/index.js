@@ -29,22 +29,22 @@ const Summaries = () => {
     getYearsWithMonths();
   }, [selectedYearMonth]);
 
-  return Object.keys(selectedYearMonth).length === 0 ? (
-    <div></div>
-  ) : (
+  return (
     <div>
       <PageHeader option="Monthly Summaries" icon="file outline" />
-      <div>
-        <h4>Choose a year and month </h4>
-        <MonthSelector
-          selectedYearMonth={selectedYearMonth}
-          updateYearMonth={updateYearMonth}
-          yearsWithMonths={yearsWithMonths}
-          disableAllOption
-        />
-      </div>
-      <ExpenseSummary selectedYearMonth={selectedYearMonth} />
-      <BudgetVSExpense selectedYearMonth={selectedYearMonth} />
+      {Object.keys(selectedYearMonth).length !== 0 ? (
+        <div>
+          <h4>Choose a year and month </h4>
+          <MonthSelector
+            selectedYearMonth={selectedYearMonth}
+            updateYearMonth={updateYearMonth}
+            yearsWithMonths={yearsWithMonths}
+            disableAllOption
+          />
+          <ExpenseSummary selectedYearMonth={selectedYearMonth} />
+          <BudgetVSExpense selectedYearMonth={selectedYearMonth} />
+        </div>
+      ) : null}
     </div>
   );
 };

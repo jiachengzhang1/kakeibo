@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const routes = require("./routes");
+const auth = require("./middleware/auth");
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(auth);
 app.use(routes);
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
