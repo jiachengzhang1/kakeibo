@@ -1,13 +1,14 @@
 import React, { useState, useContext } from "react";
-import axios from "axios";
 import UserContext from "../../context/UserContext";
 import { useHistory } from "react-router-dom";
 
-import "./styles.css";
+import { register, login } from "@services/Authentication";
 import AuthField from "./AuthField";
 import AuthFooter from "./AuthFooter";
 import ErrorMessage from "./ErrorMessage";
 import { getError, validate } from "./helpers";
+
+import "./styles.css";
 
 const Authentication = ({ isRegister = false }) => {
   const [userName, setUserName] = useState("");
@@ -32,11 +33,7 @@ const Authentication = ({ isRegister = false }) => {
           ? { userName, password, passwordCheck }
           : { userName, password };
 
-        const response = isRegister
-          ? await axios.post("http://localhost:5000/users/register", user)
-          : await axios.post("http://localhost:5000/users/login", user);
-
-        const userData = response.data;
+        const userData = isRegister ? await register(user) : await login(user);
 
         setUserData(userData);
 

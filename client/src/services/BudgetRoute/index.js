@@ -1,4 +1,4 @@
-import kakeiboAPI from "@api/kakeiboAPI";
+import kakeiboAPI from "@services/kakeiboAPI";
 
 export const fetchBudgets = async (currentYear, currentMonth) => {
   try {

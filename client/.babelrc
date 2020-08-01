@@ -8,7 +8,7 @@
       {
         "root": ["./src"],
         "alias": {
-          "@api": "./src/api",
+          "@services": "./src/services",
           "@components": "./src/components",
           "@utils": "./src/utils",
           "@pages": "./src/pages",

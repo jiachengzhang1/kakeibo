@@ -1,4 +1,4 @@
-import kakeiboAPI from "@api/kakeiboAPI";
+import kakeiboAPI from "@services/kakeiboAPI";
 
 export const expenseRequest = async (
   request = { action: "GET_EXPENSES_WITH_YEARS_AND_MONTHS", payload: {} },

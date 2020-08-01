@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import UserContext from "../../context/UserContext";
 import { Route, useHistory } from "react-router-dom";
 
 import Expenses from "@pages/Expenses";
@@ -12,10 +13,22 @@ import Authentication from "../Authentication";
 
 import { Header, Toolbar } from "../Navigation";
 import Logout from "@pages/Logout";
-import User from "../../pages/User";
+import User from "@pages/User";
 
-const AuthWrapper = ({ authenticated }) => {
-  console.log(authenticated);
+const AuthWrapper = () => {
+  const { userData } = useContext(UserContext);
+  const authenticated = userData.user !== undefined;
+
+  const history = useHistory();
+
+  if (!authenticated) {
+    if (localStorage.getItem("logout") === "OUT") {
+      localStorage.setItem("logout", "");
+    } else {
+      history.push("/login");
+    }
+  }
+
   const [sideDrawOpen, setSideDrawOpen] = useState(false);
 
   const handleToggleOnClick = () => {
@@ -76,12 +89,9 @@ const AuthWrapper = ({ authenticated }) => {
     </div>
   );
 
-  const history = useHistory();
-  if (authenticated === false) {
-    history.push("/login");
-  } else {
-    history.push("/");
-  }
+  // if (authenticated === false) {
+
+  // }
 
   return (
     <div>

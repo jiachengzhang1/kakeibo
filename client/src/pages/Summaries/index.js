@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { fetchYearsWithMonths } from "@api/SummaryRoute";
+import { fetchYearsWithMonths } from "@services/SummaryRoute";
 import PageHeader from "@components/PageHeader";
 import MonthSelector from "@components/MonthSelector";
 

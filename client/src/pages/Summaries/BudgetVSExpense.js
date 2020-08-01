@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { GroupedBarChart } from "@components/Charts/GroupedBarChart";
-import { fetchBudgetVSExpenseSummary } from "@api";
+import { fetchBudgetVSExpenseSummary } from "@services";
 
 const BudgetVSExpense = ({
   selectedYearMonth: { selectedYear, selectedMonth },

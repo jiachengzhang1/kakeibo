@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { fetchExpenseSummary } from "@api";
+import { fetchExpenseSummary } from "@services";
 import { PieChart } from "@components/Charts";
 
 import "./ExpenseSummary.css";

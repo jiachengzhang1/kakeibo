@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 
+import { getValidatedUsers, validateToken } from "@services/Authentication";
 import UserContext from "../context/UserContext";
-import axios from "axios";
-
 import AuthWrapper from "./AuthWrapper";
 
 import "./styles.css";
@@ -14,22 +13,13 @@ const App = () => {
   const checkLoggedIn = async () => {
     const token = localStorage.getItem("auth-token");
     if (token) {
-      // console.log(token);
-      const response = await axios.post(
-        "http://localhost:5000/users/tokenIsValid",
-        {},
-        { headers: { "x-auth-token": token } }
-      );
-      // console.log(response.data);
-      if (response.data) {
-        const userResponse = await axios.get("http://localhost:5000/users/", {
-          headers: { "x-auth-token": token },
-        });
+      const tokenValid = await validateToken(token);
+      if (tokenValid) {
+        const data = await getValidatedUsers(token);
         setUserData({
           token,
-          user: userResponse.data,
+          user: data,
         });
-        // console.log(userResponse);
       }
     }
   };
@@ -38,13 +28,11 @@ const App = () => {
     checkLoggedIn();
   }, []);
 
-  const authenticated = userData.user !== undefined;
-
   return (
     <div>
       <Router>
         <UserContext.Provider value={{ userData, setUserData }}>
-          <AuthWrapper authenticated={authenticated} />
+          <AuthWrapper />
         </UserContext.Provider>
       </Router>
     </div>

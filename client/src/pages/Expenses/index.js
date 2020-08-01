@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 
-import { expenseRequest } from "@api/ExpenseRoute";
+import { expenseRequest } from "@services/ExpenseRoute";
 import Pagination from "@components/Pagination";
 import PageHeader from "@components/PageHeader";
 import Backdrop from "@components/Backdrop";
@@ -15,11 +15,8 @@ const DEFAULT_EXPENSES_PAGE = 1;
 const DEFAULT_EXPENSES_PER_PAGE = 15;
 
 const Expenses = () => {
-
-  const {userData, setUserData} = useContext(UserContext);
-  // console.log(userData);
-  const {token, user} = userData;
-
+  const { userData } = useContext(UserContext);
+  const { token, user } = userData;
 
   // state of all expenses showing on this page
   const [expensesState, setExpensesState] = useState([]);
@@ -61,7 +58,13 @@ const Expenses = () => {
         const {
           expenses: { docs, totalPages },
           yearsWithMonths,
-        } = await expenseRequest({ ...request, ...userData }, page, limit, year, month);
+        } = await expenseRequest(
+          { ...request, ...userData },
+          page,
+          limit,
+          year,
+          month
+        );
         totalPagesRef.current = totalPages;
         yearsWithMonthsRef.current = yearsWithMonths;
         setExpensesState(docs);

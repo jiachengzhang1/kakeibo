@@ -1,4 +1,4 @@
-import kakeiboAPI from "@api/kakeiboAPI";
+import kakeiboAPI from "@services/kakeiboAPI";
 import axios from "axios";
 
 export const cancelToken = axios.CancelToken.source();

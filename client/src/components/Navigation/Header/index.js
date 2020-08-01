@@ -13,8 +13,9 @@ export const Header = ({ handleToggleOnClick, sideDrawOpen }) => {
   const login = () => history.push("/login");
   const logout = () => {
     setUserData({});
+    localStorage.setItem("logout", "OUT");
     localStorage.setItem("auth-token", "");
-    history.push("/logout");
+    history.push("/login");
   };
   const register = () => history.push("/register");
   const authLinks = userData.user ? (
