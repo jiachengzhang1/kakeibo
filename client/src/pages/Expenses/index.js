@@ -14,7 +14,8 @@ import UserContext from "../../context/UserContext";
 const DEFAULT_EXPENSES_PAGE = 1;
 const DEFAULT_EXPENSES_PER_PAGE = 15;
 
-const Expenses = () => {
+const Expenses = ({ authenticated }) => {
+  // console.log("dd");
   const { userData } = useContext(UserContext);
   const { token, user } = userData;
 
@@ -36,6 +37,8 @@ const Expenses = () => {
     setSelectedYearMonth(yearMonth);
   };
   const yearsWithMonthsRef = useRef([]);
+
+  // console.log(yearsWithMonthsRef);
 
   // state for pagination
   const [currentPageState, setCurrentPageState] = useState(
@@ -92,6 +95,8 @@ const Expenses = () => {
       setUpdating={setUpdating}
     />
   );
+  // console.log(authenticated);
+  // if (!authenticated) return <div>HAHA</div>;
 
   return (
     <div>

@@ -1,20 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 
 import { GroupedBarChart } from "@components/Charts/GroupedBarChart";
 import { fetchBudgetVSExpenseSummary } from "@services";
+import UserContext from "../../context/UserContext";
 
 const BudgetVSExpense = ({
   selectedYearMonth: { selectedYear, selectedMonth },
 }) => {
+  const { userData } = useContext(UserContext);
+  const { user, token } = userData;
+
+  const authenticated = user && token;
+
   const [chartData, setChartData] = useState({});
 
   useEffect(() => {
     const fetchChartData = async () => {
-      const data = await fetchBudgetVSExpenseSummary(
-        selectedYear,
-        selectedMonth
-      );
-      setChartData(data);
+      if (authenticated) {
+        const data = await fetchBudgetVSExpenseSummary(
+          selectedYear,
+          selectedMonth,
+          token
+        );
+        setChartData(data);
+      }
     };
     fetchChartData();
   }, [selectedYear, selectedMonth]);

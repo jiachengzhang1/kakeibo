@@ -25,6 +25,9 @@ const BudgetCard = ({
   handleBudgetUpdate,
   handleBudgetDelete,
 }) => {
+  // const { userData } = useContext(UserContext);
+  // const { token, user } = userData;
+
   const { _id, tag, amount } = budget;
   const [input, setInput] = useState(amount);
   const initalSelection = availableTags.length > 0 ? availableTags[0] : "";

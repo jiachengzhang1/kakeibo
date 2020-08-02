@@ -9,6 +9,7 @@ import "./styles.css";
 
 const App = () => {
   const [userData, setUserData] = useState({});
+  // const [authenticated, setAuthenticated] = useState(false);
 
   const checkLoggedIn = async () => {
     const token = localStorage.getItem("auth-token");
@@ -20,6 +21,8 @@ const App = () => {
           token,
           user: data,
         });
+      } else {
+        localStorage.removeItem("auth-token");
       }
     }
   };

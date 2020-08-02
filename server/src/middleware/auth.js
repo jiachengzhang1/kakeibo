@@ -9,7 +9,8 @@ const auth = (req, res, next) => {
       request !== "POST" ||
       (url !== "/users/register" &&
         url !== "/users/login" &&
-        url !== "/ users/tokenIsValid")
+        url !== "/ users/tokenIsValid" &&
+        url !== "/users/demo")
     ) {
       const token = req.header("x-auth-token");
       // console.log(req.headers);

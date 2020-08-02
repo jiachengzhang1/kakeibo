@@ -25,3 +25,22 @@ export const getValidatedUsers = async (token) => {
   });
   return response.data;
 };
+
+export const createDemo = async () => {
+  const response = await kakeiboAPI.post("/users/demo");
+  return response.data;
+};
+
+export const updatePassword = async (data, token) => {
+  const response = await kakeiboAPI.put("/users/update", data, {
+    headers: { "x-auth-token": token },
+  });
+  return response.data;
+};
+
+export const deleteAccount = async (token) => {
+  const response = await kakeiboAPI.delete("/users/delete", {
+    headers: { "x-auth-token": token },
+  });
+  return response.data;
+};

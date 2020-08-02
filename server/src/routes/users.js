@@ -2,6 +2,8 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
+const Expense = require("../models/Expense");
+const Budget = require("../models/Budget");
 
 const router = require("express").Router();
 
@@ -109,9 +111,26 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.delete("/delete", auth, async (req, res) => {
+router.put("/update", async (req, res) => {
+  const { password } = req.body;
+  const saltRounds = 10;
+  const passwordHash = await bcrypt.hash(password, saltRounds);
+
+  await User.findOneAndUpdate(
+    { userName: req.user },
+    { $set: { password: passwordHash } }
+  );
+
+  res.status(200).json(true);
+});
+
+router.delete("/delete", async (req, res) => {
   try {
     const deletedUser = await User.findOneAndDelete({ userName: req.user });
+
+    await Expense.deleteMany({ username: req.user });
+    await Budget.deleteMany({ username: req.user });
+
     res.status(200).json(deletedUser);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -121,8 +140,6 @@ router.delete("/delete", auth, async (req, res) => {
 router.post("/tokenIsValid", async (req, res) => {
   try {
     const token = req.header("x-auth-token");
-    // console.log(req.headers);
-    // console.log(token);
     if (!token || token === null) return res.json(false);
 
     const verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
@@ -133,7 +150,74 @@ router.post("/tokenIsValid", async (req, res) => {
 
     return res.json(true);
   } catch (error) {
-    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post("/demo", async (req, res) => {
+  try {
+    let existingUser = null;
+    let userName = "";
+    do {
+      userName = Math.random().toString(36).substring(2, 8);
+      existingUser = await User.findOne({
+        userName: userName,
+      });
+    } while (existingUser);
+
+    const password = userName;
+
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+
+    const newUser = new User({
+      userName,
+      password: passwordHash,
+    });
+
+    const savedUser = await newUser.save();
+
+    const token = await jwt.sign({ id: userName }, process.env.JWT_SECRET);
+
+    const demoExpenseData = await Expense.paginate(
+      { username: "admin" },
+      {
+        pagination: false,
+        select: {
+          _id: false,
+          __v: false,
+          username: false,
+          date_created: false,
+        },
+      }
+    );
+    const expenseData = demoExpenseData.docs;
+    for (let i = 0; i < expenseData.length; i++) {
+      expenseData[i].username = userName;
+    }
+
+    const demoBudgetData = await Budget.find(
+      { username: "admin" },
+      { _id: 0 }
+    ).sort({
+      date_created: -1,
+    });
+    const budgetData = demoBudgetData;
+    for (let i = 0; i < budgetData.length; i++) {
+      budgetData[i].username = userName;
+    }
+
+    await Expense.insertMany(expenseData);
+    await Budget.insertMany(budgetData);
+
+    res.status(200).json({
+      token,
+      user: {
+        id: savedUser._id,
+        userName: savedUser.userName,
+      },
+    });
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });

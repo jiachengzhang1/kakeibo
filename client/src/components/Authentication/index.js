@@ -9,6 +9,7 @@ import ErrorMessage from "./ErrorMessage";
 import { getError, validate } from "./helpers";
 
 import "./styles.css";
+import { createDemo } from "../../services/Authentication";
 
 const Authentication = ({ isRegister = false }) => {
   const [userName, setUserName] = useState("");
@@ -45,6 +46,16 @@ const Authentication = ({ isRegister = false }) => {
       getError(error.response.data, setErrorMessage);
     }
   };
+
+  const handleCreateDemo = async () => {
+    const user = await createDemo();
+
+    setUserData(user);
+    localStorage.setItem("auth-token", user.token);
+
+    history.push("/");
+  };
+
   const title = isRegister ? "Register" : "Login";
 
   const passwordChecking = isRegister ? (
@@ -107,6 +118,9 @@ const Authentication = ({ isRegister = false }) => {
         </form>
       </div>
       {authenticationFooter}
+      <button className="authentication-demo" onClick={handleCreateDemo}>
+        Demo Account
+      </button>
     </div>
   );
 };

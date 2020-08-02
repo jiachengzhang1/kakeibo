@@ -13,7 +13,7 @@
 
 .header-content {
   position: fixed;
-  right: 30px;
+  right: 15px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -30,14 +30,27 @@
 }
 
 .header h3 {
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 .header button {
   border: none;
   background: inherit;
   color: #d7d7d7;
-  margin-left: 16px;
+  margin-left: 1px;
+}
+
+.dropdown-menu {
+  background: #20232a;
+}
+
+.dropdown-menu button {
+  margin-left: 0;
+}
+
+.dropdown-menu button:hover {
+  margin-left: 0;
+  background: #20232a;
 }
 
 .header-user {

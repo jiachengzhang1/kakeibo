@@ -1,9 +1,12 @@
 import kakeiboAPI from "@services/kakeiboAPI";
 
-export const fetchBudgets = async (currentYear, currentMonth) => {
+export const fetchBudgets = async (currentYear, currentMonth, token) => {
   try {
     const response = await kakeiboAPI.get(
-      `/budgets/${currentYear}/${currentMonth}`
+      `/budgets/${currentYear}/${currentMonth}`,
+      {
+        headers: { "x-auth-token": token },
+      }
     );
 
     const budgetData = [];
@@ -15,29 +18,35 @@ export const fetchBudgets = async (currentYear, currentMonth) => {
     });
     return { budgetData, allTags };
   } catch (error) {
-    console.error(error);
+    console.error(error.response.data);
   }
 };
 
-export const createBudget = async (data) => {
+export const createBudget = async (data, token) => {
   try {
-    await kakeiboAPI.post("/budgets", data);
+    await kakeiboAPI.post("/budgets", data, {
+      headers: { "x-auth-token": token },
+    });
   } catch (error) {
-    console.error(error);
+    console.error(error.response.data);
   }
 };
 
-export const updateBudget = async (id, data) => {
+export const updateBudget = async (id, data, token) => {
   try {
-    await kakeiboAPI.put(`/budgets/${id}`, data);
+    await kakeiboAPI.put(`/budgets/${id}`, data, {
+      headers: { "x-auth-token": token },
+    });
   } catch (error) {
-    console.error(error);
+    console.error(error.response.data);
   }
 };
 
-export const deleteBudget = async (id) => {
+export const deleteBudget = async (id, token) => {
   try {
-    await kakeiboAPI.delete(`/budgets/${id}`);
+    await kakeiboAPI.delete(`/budgets/${id}`, {
+      headers: { "x-auth-token": token },
+    });
   } catch (error) {
     console.error(error);
   }

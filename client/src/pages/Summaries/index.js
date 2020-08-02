@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { fetchYearsWithMonths } from "@services/SummaryRoute";
 import PageHeader from "@components/PageHeader";
@@ -6,22 +6,30 @@ import MonthSelector from "@components/MonthSelector";
 
 import ExpenseSummary from "./ExpenseSummary";
 import BudgetVSExpense from "./BudgetVSExpense";
+import UserContext from "../../context/UserContext";
 
 const Summaries = () => {
   const [selectedYearMonth, setSelectedYearMonth] = useState({});
   const [yearsWithMonths, setYearsWithMonths] = useState([]);
+
+  const { userData } = useContext(UserContext);
+  const { user, token } = userData;
+
+  const authenticated = user && token;
 
   const updateYearMonth = (yearMonth) => {
     setSelectedYearMonth(yearMonth);
   };
 
   const getYearsWithMonths = async () => {
-    const data = await fetchYearsWithMonths();
-    setYearsWithMonths(data);
+    if (authenticated) {
+      const data = await fetchYearsWithMonths(token);
+      setYearsWithMonths(data);
 
-    const { year, months } = data[0];
-    if (Object.keys(selectedYearMonth).length === 0) {
-      setSelectedYearMonth({ selectedYear: year, selectedMonth: months[0] });
+      const { year, months } = data[0];
+      if (Object.keys(selectedYearMonth).length === 0) {
+        setSelectedYearMonth({ selectedYear: year, selectedMonth: months[0] });
+      }
     }
   };
 

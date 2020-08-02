@@ -13,7 +13,7 @@ export const DatePickerController = ({ name, control, date }) => {
         <DatePicker
           onChange={onChange}
           onBlur={onBlur}
-          selected={value || !date ? value : new Date(date)}
+          selected={value || !date ? new Date() : new Date(date)}
           dateFormat="MMMM d, yyyy"
           placeholderText="Choose a date."
         />

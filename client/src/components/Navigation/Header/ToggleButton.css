@@ -4,13 +4,13 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  height: 29px;
+  height: 25px;
   width: 30px;
   background: transparent;
   border: none;
   box-sizing: border-box;
-  margin-right: 10px;
-  margin-left: 20px;
+  /* margin-right: 1px; */
+  margin-left: -2px !important;
 }
 
 .toggle-button:focus {
@@ -18,14 +18,14 @@
 }
 
 .toggle-button-line {
-  width: 28px;
-  height: 3px;
+  width: 25px;
+  height: 2px;
   background: white;
   transition: all 0.25s ease-in-out;
 }
 
 .toggle-button-line.top.open {
-  transform: translateY(7px) rotate(45deg);
+  transform: translateY(6px) rotate(45deg);
 }
 
 .toggle-button-line.bottom.open {

@@ -1,7 +1,7 @@
-async function getYearsWithMonths(uniqueYears, model) {
+async function getYearsWithMonths(uniqueYears, model, username) {
   const promises = uniqueYears.map(async (uniqueYear) => {
     const yearsWithMonths = await model.aggregate([
-      { $match: { year: uniqueYear } },
+      { $match: { year: uniqueYear, username: username } },
       { $group: { _id: "$year", months: { $addToSet: "$month" } } },
     ]);
 

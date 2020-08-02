@@ -3,7 +3,6 @@ const Expense = require("../models/Expense");
 const Budget = require("../models/Budget");
 
 const getYearsWithMonths = require("./sharedFunctions/getYearsWithMonths");
-const { response } = require("express");
 
 const router = express.Router();
 
@@ -22,7 +21,7 @@ router.get("/expenses/:year?/:month?", async (req, res) => {
       },
     ];
     const match = {
-      $match: {},
+      $match: { username: req.user },
     };
 
     const { year, month } = req.params;
@@ -38,17 +37,16 @@ router.get("/expenses/:year?/:month?", async (req, res) => {
       pipline.unshift(match);
     }
 
-    // console.log(pipline);
     const response = await Expense.aggregate(pipline);
-    // console.log(response);
+
     const data = response.map(({ totalAmount, _id, count }) => {
       return { _id, count, totalAmount: parseFloat(totalAmount).toFixed(1) };
     });
-    console.log(data);
+
     res.status(200).send({
       year: year,
       month: month,
-      spendingSummary: response,
+      spendingSummary: data,
     });
   } catch (error) {
     res.status(400).json({ error: error.toString() });
@@ -78,10 +76,8 @@ router.get("/budgets/:year?/:month?", async (req, res) => {
       },
     ];
 
-    // console.log(pipline);
-
     const match = {
-      $match: {},
+      $match: { username: req.user },
     };
 
     const { year, month } = req.params;
@@ -93,28 +89,57 @@ router.get("/budgets/:year?/:month?", async (req, res) => {
       match.$match.month = parseInt(month);
     }
 
-    if (Object.keys(match.$match).length !== 0) {
-      budgetPipline.unshift(match);
-      expensePipline.unshift(match);
-    }
+    budgetPipline.unshift(match);
+    expensePipline.unshift(match);
 
     const expenseResponse = await Expense.aggregate(expensePipline);
 
     // console.log(expenseResponse);
 
     const budgetResponse = await Budget.aggregate(budgetPipline);
+    // console.log(budgetResponse);
 
     const response = [];
-    const length = Math.max(expenseResponse.length, budgetResponse.length);
-    for (let i = 0; i < length; i++) {
-      const budgetExpense = {
-        ...expenseResponse[i],
-        ...budgetResponse.find((item) => item._id === expenseResponse[i]._id),
-      };
-      const { _id, expense = 0, budget = 0 } = budgetExpense;
 
-      response.push({ tag: _id, expense, budget });
+    expenseResponse.sort((a, b) => (a._id > b._id ? 1 : -1));
+    budgetResponse.sort((a, b) => (a._id > b._id ? 1 : -1));
+
+    const expenseLength = expenseResponse.length,
+      budgetLength = budgetResponse.length;
+    let i = 0,
+      j = 0;
+    while (i < expenseLength && j < budgetLength) {
+      const { _id: expenseId, expense } = expenseResponse[i];
+      const { _id: budgetId, budget } = budgetResponse[j];
+
+      if (expenseId === budgetId) {
+        response.push({ tag: expenseId, expense, budget });
+      } else if (expenseId < budgetId) {
+        response.push({ tag: expenseId, expense, budget: 0 });
+      } else {
+        response.push({ tag: budgetId, expense: 0, budget });
+      }
+      i++;
+      j++;
     }
+
+    while (i < expenseLength) {
+      response.push({
+        tag: expenseResponse[i]._id,
+        expense: expenseResponse[i].expense,
+        budget: 0,
+      });
+      i++;
+    }
+    while (j < budgetLength) {
+      response.push({
+        tag: budgetResponse[j]._id,
+        expense: 0,
+        budget: budgetResponse[j].budget,
+      });
+      j++;
+    }
+
     res.status(200).send(response);
   } catch (error) {
     res.status(400).json({ error: error.toString() });
@@ -123,17 +148,19 @@ router.get("/budgets/:year?/:month?", async (req, res) => {
 
 router.get("/months", async (req, res) => {
   try {
-    const yearsWithMonths = await getYearMonth();
+    const yearsWithMonths = await getYearMonth(req.user);
     res.status(200).send(yearsWithMonths);
   } catch (error) {
     res.status(400).json({ error: error.toString() });
   }
 });
 
-async function getYearMonth() {
+async function getYearMonth(username) {
   try {
-    const expenseUniqueYears = await Expense.find().distinct("year");
-    const budgetUniqueYears = await Budget.find().distinct("year");
+    const expenseUniqueYears = await Expense.find({ username }).distinct(
+      "year"
+    );
+    const budgetUniqueYears = await Budget.find({ username }).distinct("year");
 
     const uniqueYearsSet = new Set([
       ...expenseUniqueYears,
@@ -143,11 +170,13 @@ async function getYearMonth() {
 
     const expensesYearsWithMonths = await getYearsWithMonths(
       uniqueYears,
-      Expense
+      Expense,
+      username
     );
     const budgetsYearsWithMonths = await getYearsWithMonths(
       uniqueYears,
-      Budget
+      Budget,
+      username
     );
 
     return mergeYearsMonths(expensesYearsWithMonths, budgetsYearsWithMonths);

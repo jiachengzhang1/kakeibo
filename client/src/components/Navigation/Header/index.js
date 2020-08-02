@@ -7,23 +7,38 @@ import UserContext from "../../../context/UserContext";
 
 export const Header = ({ handleToggleOnClick, sideDrawOpen }) => {
   const { userData, setUserData } = useContext(UserContext);
-
   const history = useHistory();
 
-  const login = () => history.push("/login");
+  const login = () => history.push("/");
   const logout = () => {
     setUserData({});
-    localStorage.setItem("logout", "OUT");
-    localStorage.setItem("auth-token", "");
-    history.push("/login");
+    localStorage.removeItem("auth-token");
+    history.push("/");
   };
+  const showAccount = () => history.push("/user");
   const register = () => history.push("/register");
   const authLinks = userData.user ? (
     <>
-      <button className="header-user" onClick={() => history.push("/user")}>
-        😂
-      </button>
-      <button onClick={logout}>Logout</button>
+      <div className="dropdown">
+        <button
+          className="btn btn-secondary dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          {userData.user.userName}
+        </button>
+        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <button className="dropdown-item" onClick={showAccount}>
+            Account
+          </button>
+          <button className="dropdown-item" onClick={logout}>
+            Logout
+          </button>
+        </div>
+      </div>
     </>
   ) : (
     <>
@@ -42,8 +57,7 @@ export const Header = ({ handleToggleOnClick, sideDrawOpen }) => {
   return (
     <div className="header">
       {toggleButton}
-      {/* <h1>kakeibo</h1> */}
-      <h3>Expenses Tracker</h3>
+      <h3>ExpTracker</h3>
       <div className="header-content">
         {authLinks}
         <NavLink to="/about">About</NavLink>

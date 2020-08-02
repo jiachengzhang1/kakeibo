@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import PageHeader from "@components/PageHeader";
 import { MONTH_MAP } from "@utils/constants";
@@ -9,14 +9,18 @@ import {
   deleteBudget,
   createBudget,
 } from "@services";
-
+import UserContext from "../../context/UserContext";
 import BudgetCards from "./BudgetCards";
 import CreateBudget from "./CreateBudget";
 
 import "./styles.css";
 
 const Budgets = () => {
-  // TODO: select current month
+  const { userData } = useContext(UserContext);
+  const { token, user } = userData;
+
+  const authenticated = token && user;
+
   const currentDate = new Date();
 
   const [budgets, setBudgets] = useState([]);
@@ -30,12 +34,15 @@ const Budgets = () => {
   const { selectedYear, selectedMonth } = selectedYearMonth;
 
   const fetchData = async () => {
-    const { budgetData, allTags } = await fetchBudgets(
-      selectedYear,
-      selectedMonth
-    );
-    setAvailableTags(allTags);
-    setBudgets(budgetData);
+    if (authenticated) {
+      const { budgetData, allTags } = await fetchBudgets(
+        selectedYear,
+        selectedMonth,
+        token
+      );
+      setAvailableTags(allTags);
+      setBudgets(budgetData);
+    }
   };
 
   useEffect(() => {
@@ -43,40 +50,45 @@ const Budgets = () => {
   }, []);
 
   const handleBudgetUpdate = async (id, newBudget) => {
-    const newBudgetObject = {
-      amount: newBudget.toString(),
-      _id: id,
-    };
-    const updatedBudgets = updateObjectById(budgets, newBudgetObject);
-    setBudgets(updatedBudgets);
+    if (authenticated) {
+      const newBudgetObject = {
+        amount: newBudget.toString(),
+        _id: id,
+      };
+      const updatedBudgets = updateObjectById(budgets, newBudgetObject);
+      setBudgets(updatedBudgets);
 
-    await updateBudget(id, newBudgetObject);
-    await fetchData();
+      await updateBudget(id, newBudgetObject, token);
+      await fetchData();
+    }
   };
 
   const handleBudgetDelete = async (id) => {
-    setCreatingNewBudget(false);
-    if (id === "") {
-      return;
+    if (authenticated) {
+      setCreatingNewBudget(false);
+      if (id === "") {
+        return;
+      }
+      const updatedBudgets = deleteObjectById(budgets, id);
+      setBudgets(updatedBudgets);
+
+      await deleteBudget(id, token);
+      await fetchData();
     }
-
-    const updatedBudgets = deleteObjectById(budgets, id);
-    setBudgets(updatedBudgets);
-
-    await deleteBudget(id);
-    await fetchData();
   };
 
   const handleBudgetCreate = async ({ tag, amount }) => {
-    const newBudget = {
-      year: selectedYear,
-      month: selectedMonth,
-      tag,
-      amount,
-    };
-    await createBudget(newBudget);
-    await fetchData();
-    setCreatingNewBudget(false);
+    if (authenticated) {
+      const newBudget = {
+        year: selectedYear,
+        month: selectedMonth,
+        tag,
+        amount,
+      };
+      await createBudget(newBudget, token);
+      await fetchData();
+      setCreatingNewBudget(false);
+    }
   };
 
   const createNewBudget = creatingNewBudget ? (

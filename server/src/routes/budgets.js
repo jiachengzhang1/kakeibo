@@ -7,7 +7,7 @@ router.get("/:year?/:month?", async (req, res) => {
   try {
     const { year, month } = req.params;
 
-    const filter = {};
+    const filter = { username: req.user };
 
     if (year !== undefined) {
       filter.year = year;
@@ -29,6 +29,8 @@ router.get("/:year?/:month?", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const data = req.body;
+    data.username = req.user;
+    console.log(data);
     const budget = new Budget(data);
     const response = await budget.save();
     res.status(200).send(response);

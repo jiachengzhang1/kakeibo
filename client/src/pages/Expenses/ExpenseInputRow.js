@@ -48,6 +48,9 @@ const ExpenseInputRow = ({
     if (!expenseUnchanged(rest)) {
       const action = id === "new" ? "CREATE_ONE" : "UPDATE_ONE";
       const payload = { id: id, data: rest };
+      if (id === "new" && rest.formated_date === undefined) {
+        rest.formated_date = new Date();
+      }
       await updateData({ action: action, payload: payload });
     }
 

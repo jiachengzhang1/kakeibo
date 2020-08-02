@@ -1,7 +1,6 @@
 const express = require("express");
 const Expense = require("../models/Expense");
 const getYearsWithMonths = require("./sharedFunctions/getYearsWithMonths");
-const auth = require("../middleware/auth");
 
 const router = express.Router();
 const defaultQuery = {},
@@ -26,7 +25,11 @@ router.post("/", async (req, res) => {
 
       // get expenses and unique years with unique months of all expenses
       case "GET_EXPENSES_WITH_YEARS_AND_MONTHS":
-        response = await getExpensesWithYearsAndMonths(queryOfUser, options);
+        response = await getExpensesWithYearsAndMonths(
+          queryOfUser,
+          options,
+          req.user
+        );
         break;
 
       // create an expense
@@ -37,7 +40,11 @@ router.post("/", async (req, res) => {
         payload.data.username = req.user;
         const createStatus = await createExpense(payload.data);
         if (createStatus === 200) {
-          response = await getExpensesWithYearsAndMonths(queryOfUser, options);
+          response = await getExpensesWithYearsAndMonths(
+            queryOfUser,
+            options,
+            req.user
+          );
         }
         status = createStatus;
         break;
@@ -49,7 +56,11 @@ router.post("/", async (req, res) => {
         }
         const updateStatus = await updateExpense(payload.id, payload.data);
         if (updateStatus === 200) {
-          response = await getExpensesWithYearsAndMonths(queryOfUser, options);
+          response = await getExpensesWithYearsAndMonths(
+            queryOfUser,
+            options,
+            req.user
+          );
         }
         status = updateStatus;
         break;
@@ -62,7 +73,11 @@ router.post("/", async (req, res) => {
 
         const deleteStatus = await deleteExpense(payload.id);
         if (deleteStatus === 200) {
-          response = await getExpensesWithYearsAndMonths(queryOfUser, options);
+          response = await getExpensesWithYearsAndMonths(
+            queryOfUser,
+            options,
+            req.user
+          );
           // console.log(response);
         } else if (deleteStatus === 204) {
           response = "No change is made!";
@@ -90,12 +105,10 @@ async function getExpenses(query, options) {
   }
 }
 
-async function getExpensesWithYearsAndMonths(query, options) {
-  console.log(query);
+async function getExpensesWithYearsAndMonths(query, options, user) {
   const expenses = await getExpenses(query, options);
-  const uniqueYears = await Expense.find().distinct("year");
-  // console.log(uniqueYears);
-  const yearsWithMonths = await getYearsWithMonths(uniqueYears, Expense);
+  const uniqueYears = await Expense.find({ username: user }).distinct("year");
+  const yearsWithMonths = await getYearsWithMonths(uniqueYears, Expense, user);
   return { yearsWithMonths, expenses };
 }
 

@@ -1,0 +1,65 @@
+.user {
+  margin-top: 30px;
+}
+
+.user-actions button {
+  margin-top: 10px;
+  margin-right: 10px;
+  background: none;
+  border: 1px solid rgba(0, 0, 0, 0.26);
+  border-radius: 5px;
+  padding: 5px;
+  outline: none;
+}
+
+.user-delete {
+  color: red;
+  border-color: red !important;
+}
+
+.user-delete:hover {
+  color: white;
+  background: red;
+}
+
+.user-password {
+  color: blue;
+  border-color: blue !important;
+}
+
+.user-password:hover {
+  color: white;
+  background: blue;
+}
+
+.user-change-password {
+  display: none;
+  margin-top: 15px;
+}
+
+.user-change-password.show {
+  display: inline-block;
+}
+
+.user-change-password form {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+}
+
+.user-change-password input[type="password"] {
+  width: 200px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.26);
+  border-radius: 5px;
+}
+
+.user-change-password input[type="password"]:focus {
+  outline: none;
+  border: 1px solid rgba(0, 0, 255, 0.664);
+}
+
+.user-change-password input[type="submit"] {
+  width: 70px;
+  margin-bottom: 10px;
+}

@@ -95,3 +95,24 @@
   color: #cc0000;
   font-size: 1rem;
 }
+
+.authentication-demo {
+  margin-top: 20px;
+  font-size: 1.3rem;
+  border: 1px solid rgb(19, 196, 19);
+  color: rgb(19, 196, 19);
+  background: white;
+  padding: 5px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.2) 0px 0px 8px 2px
+    rgba(0, 0, 0, 0.2);
+}
+
+.authentication-demo:focus {
+  outline: none;
+}
+
+.authentication-demo:hover {
+  background: rgb(19, 196, 19);
+  color: white;
+}
