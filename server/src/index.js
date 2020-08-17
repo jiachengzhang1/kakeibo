@@ -21,7 +21,7 @@ const PORT = 5000;
 
 app.use(
   cors({
-    origin: "http://localhost:8080",
+    origin: process.env.ORIGIN,
     credentials: true,
   })
 );
